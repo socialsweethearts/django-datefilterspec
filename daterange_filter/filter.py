@@ -151,6 +151,13 @@ class DateRangeFilter(admin.filters.FieldListFilter):
         self.form = self.get_form(request)
 
     def choices(self, cl):
+        """
+        Pop the original date range parameters when the form has changed and always return all the other
+        filter parameters
+        """
+        if self.form.has_changed():
+            cl.params.pop(self.lookup_kwarg_since, None)
+            cl.params.pop(self.lookup_kwarg_upto, None)
         return ({
             'get_query': cl.params,
         }, )
